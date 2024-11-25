@@ -1,27 +1,29 @@
-import pytest
 from tests_class import TestCase
 
 
 class TestID:
 
-    @pytest.mark.parametrize("animal_name", ["Orlock", "Chinchilla"])
-    def test_create_and_find_animal(self, animal_name):
-        test = TestCase()
-        animal_id = test.create_animal(animal_name)
-        assert animal_id, "Не удалось создать животное!"
+    def test_first(self):
+        test_case = TestCase()
+        id_new_animal = test_case.create_animal('Orlock')
+        id_find_animal = test_case.find_animal(id_new_animal)['id']
 
-        animal = test.find_animal(animal_id)
-        assert animal.get('id') == animal_id, f"Ожидалось ID {animal_id}, но получили {animal.get('id')}"  # Проверяем
+        assert id_new_animal == id_find_animal, (
+            f'[FAILED]: Ids doesnt match {id_new_animal} and {id_find_animal}'
+            )
 
-    def test_remove_animal(self):
-        test = TestCase()
-        animal_id = test.create_animal("Chinchilla")
-        assert animal_id, "Не удалось создать животное!"
+    def test_second(self):
+        test_case = TestCase()
+        id_new_animal = test_case.create_animal('Chinchilla')
+        id_find_animal = test_case.find_animal(id_new_animal)['id']
 
-        animal = test.find_animal(animal_id)
-        assert animal.get('id') == animal_id, f"Ожидалось ID {animal_id}, но получили {animal.get('id')}"  # Проверяем
+        assert id_new_animal == id_find_animal, (
+            f'[FAILED]: Ids doesnt match {id_new_animal} and {id_find_animal}'
+            )
 
-        test.remove_animal(animal_id)
+        test_case.remove_animal(id_new_animal)
+        message_find_animal = test_case.find_animal(id_new_animal)['message']
 
-        response = test.find_animal(animal_id)
-        assert response.get('message') == "Pet not found", "Животное не было удалено!"
+        assert message_find_animal == "Pet not found", (
+            f'[FAILED]: Animal with the id {id_new_animal} was not removed'
+            )
